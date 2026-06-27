@@ -596,8 +596,12 @@ void QTextStreamPrivate::flushWriteBuffer()
     }
 
     // flush the file
-#if !defined(QT_NO_QOBJECT) && !defined(QT_NO_FILEENGINE)
+#if !defined(QT_NO_FILEENGINE)
+#if !defined(QT_NO_QOBJECT)
     QFileDevice *file = qobject_cast<QFileDevice *>(device);
+#else
+    QFileDevice *file = deleteDevice ? static_cast<QFileDevice *>(device) : 0;
+#endif
     bool flushed = !file || file->flush();
 #else
     bool flushed = true;
